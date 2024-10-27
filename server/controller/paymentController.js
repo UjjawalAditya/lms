@@ -5,13 +5,28 @@ import createError from '../utils/error.js'
 import crypto from 'crypto'
 
 
+// export const getRazorpayKey = async (req, res, next) => {
+//     res.status(200).json({
+//         success: true,
+//         message: "razorpay key",
+//         key: process.env.RAZORPAY_API_KEY
+//     })
+// }
 export const getRazorpayKey = async (req, res, next) => {
-    res.status(200).json({
+    try {
+      res.status(200).json({
         success: true,
         message: "razorpay key",
-        key: process.env.RAZORPAY_API_KEY
-    })
-}
+        key: process.env.RAZORPAY_API_KEY,
+      });
+    } catch (error) {
+      console.error("Error fetching Razorpay key:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error fetching Razorpay key",
+      });
+    }
+  }
 export const buySubscription = async (req, res, next) => {
     try {
         const { id } = req.user

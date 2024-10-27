@@ -12,7 +12,8 @@ export const getLectures = createAsyncThunk("/course/lecture", async (cid) => {
         toast.loading("Wait! fetching lectures", {
             position: 'top-center'
         })
-        const response = await axiosInstance.get(`/course/${cid}`);
+        const response = await axiosInstance.get(`http://localhost:5000/api/v1/course/${cid}`);
+
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -37,7 +38,9 @@ export const addLecture = createAsyncThunk("/course/lecture/add", async (data) =
         formData.append("lecture", data.lecture);
         formData.append("title", data.title);
         formData.append("description", data.description)
-        const response = await axiosInstance.post(`/course/${data.cid}`, formData);
+        // const response = await axiosInstance.post(`/course/${data.cid}`, formData);
+        const response = await axiosInstance.post(`http://localhost:5000/api/v1/course/${data.cid}`, formData);
+
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -62,7 +65,9 @@ export const updateLecture = createAsyncThunk("/course/lecture/update", async (d
         formData.append("lecture", data.lecture);
         formData.append("title", data.title);
         formData.append("description", data.description)
-        const response = await axiosInstance.put(`/course/lectures/${data.cid}/${data.lectureId}`, formData);
+        // const response = await axiosInstance.put(`/course/lectures/${data.cid}/${data.lectureId}`, formData);
+        const response = await axiosInstance.put(`http://localhost:5000/api/v1/course/lectures/${data.cid}/${data.lectureId}`, formData);
+
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -83,7 +88,9 @@ export const deleteLecture = createAsyncThunk("/course/lecture/delete", async (d
         toast.loading("Wait! deleting lecture", {
             position: 'top-center'
         })
-        const response = await axiosInstance.delete(`/course/lectures/${data.cid}/${data.lectureId}`);
+        // const response = await axiosInstance.delete(`/course/lectures/${data.cid}/${data.lectureId}`);
+        const response = await axiosInstance.delete(`http://localhost:5000/api/v1/course/lectures/${data.cid}/${data.lectureId}`);
+
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);

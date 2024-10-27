@@ -14,7 +14,9 @@ export const signup = createAsyncThunk("/auth/signup", async (data) => {
         toast.loading("Wait! Creating your account", {
             position: 'top-center'
         });
-        const response = await axiosInstance.post('/user/signup', data);
+        // const response = await axiosInstance.post('/user/signup', data);
+        const response = await axiosInstance.post('http://localhost:5000/api/v1/user/signup',data);
+
         if (response.status === 201) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -35,7 +37,7 @@ export const login = createAsyncThunk("/auth/login", async (data) => {
         toast.loading("Wait! login in your account", {
             position: 'top-center'
         });
-        const response = await axiosInstance.post('/user/login', data);
+        const response = await axiosInstance.post('http://localhost:5000/api/v1/user/login', data);
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -56,7 +58,7 @@ export const logout = createAsyncThunk("/auth/logout", async () => {
         toast.loading("Wait! logout in progress", {
             position: 'top-center'
         });
-        const response = await axiosInstance.get('/user/logout');
+        const response = await axiosInstance.get('http://localhost:5000/api/v1/user/logout');
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -77,7 +79,7 @@ export const forgotPassword = createAsyncThunk("/user/forgotPassword", async (da
         toast.loading("Wait! sending request...", {
             position: 'top-center'
         });
-        const response = await axiosInstance.post('/user/forgot-password', data)
+        const response = await axiosInstance.post('http://localhost:5000/api/v1/user/forgot-password', data);
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -98,7 +100,10 @@ export const resetPassword = createAsyncThunk("/user/resetPassword", async (data
         toast.loading("Wait! resetting password...", {
             position: 'top-center'
         });
-        const response = await axiosInstance.post(`/user/reset/${data.resetToken}`, {
+        // const response = await axiosInstance.post(`/user/reset/${data.resetToken}`, {
+        //     password: data.password
+        // });
+        const response = await axiosInstance.post(`http://localhost:5000/api/v1/user/reset/${data.resetToken}`, {
             password: data.password
         });
         if (response.status === 200) {
@@ -121,7 +126,8 @@ export const changePassword = createAsyncThunk("/user/changePassword", async (da
         toast.loading("Wait! changing password..", {
             position: 'top-center'
         });
-        const response = await axiosInstance.put('/user/change-password', data);
+        // const response = await axiosInstance.put('/user/change-password', data);
+        const response = await axiosInstance.put('http://localhost:5000/api/v1/user/change-password', data);
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -142,7 +148,9 @@ export const editProfile = createAsyncThunk("/user/editProfile", async (data) =>
         toast.loading("Wait! update profile", {
             position: 'top-center'
         });
-        const response = await axiosInstance.put('/user/update', data);
+        // const response = await axiosInstance.put('/user/update', data);
+        const response = await axiosInstance.put('http://localhost:5000/api/v1/user/update', data);
+
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -160,7 +168,8 @@ export const editProfile = createAsyncThunk("/user/editProfile", async (data) =>
 })
 export const getProfile = createAsyncThunk("/user/myprofile", async () => {
     try {
-        const response = await axiosInstance.get('/user/myprofile');
+        // const response = await axiosInstance.get('/user/myprofile');
+        const response = await axiosInstance.get('http://localhost:5000/api/v1/user/myprofile');
         return response.data;
     } catch (error) {
         toast.dismiss();
@@ -170,7 +179,8 @@ export const getProfile = createAsyncThunk("/user/myprofile", async () => {
 })
 export const deleteProfile = createAsyncThunk("/user/deleteProfile", async (data) => {
     try {
-        const response = await axiosInstance.delete('/user/delete-profile', data);
+        // const response = await axiosInstance.delete('/user/delete-profile', data);
+        const response = await axiosInstance.delete('http://localhost:5000/api/v1/user/delete-profile', { data });
         if (response.status === 200) {
             toast.success(response.data.message);
             return response.data;
