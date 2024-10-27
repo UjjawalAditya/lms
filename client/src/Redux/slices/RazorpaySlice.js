@@ -1,5 +1,6 @@
-import { createAsyncThunk, createSlice } from "/node_modules/.vite/deps/@reduxjs_toolkit.js?v=605c6c58"
-import { toast } from "/node_modules/.vite/deps/react-toastify.js?v=605c6c58"
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
+
 import axiosInstance from "/src/Helpers/AxiosInstance.js"
 
 const initialState = {
@@ -12,7 +13,9 @@ const initialState = {
 
 export const getRazorpayKey = createAsyncThunk("/razorpay/getKey", async () => {
     try {
-        const response = await axiosInstance.get('http://localhost:5000/payments/key');
+        const response = await axiosInstance.get('/payments/key');
+        console.log("Debug code.. My response")
+        console.log(response.data)
         return response.data;
     } catch (error) {
         toast.error(error?.response?.data?.message)
@@ -22,10 +25,10 @@ export const getRazorpayKey = createAsyncThunk("/razorpay/getKey", async () => {
 
 export const purchaseCourseBundle = createAsyncThunk("/purchaseCourse", async () => {
     try {
-        const response = await axiosInstance.post('http://localhost:5000/payments/subscribe')
+        const response = await axiosInstance.post('/payments/subscribe')
         return response.data
     } catch (error) {
-        toast.error(error?.response?.data?.message)
+        toast.error("Not able to Purchase")
         throw error
     }
 })
@@ -35,7 +38,7 @@ export const verifyUserPayment = createAsyncThunk("/verifyPayment", async (data)
         toast.loading("Wait! verify payment...", {
             position: 'top-center'
         })
-        const response = await axiosInstance.post('http://localhost:5000/payments/verify', {
+        const response = await axiosInstance.post('/payments/verify', {
             payment_id: data.payment_id,
             razorpay_signature: data.razorpay_signature,
             subscription_id: data.subscription_id
@@ -55,7 +58,7 @@ export const getPaymentsRecord = createAsyncThunk("/paymentsRecord", async () =>
         toast.loading("Getting payments record", {
             position: 'top-center'
         })
-        const response = await axiosInstance.get("http://localhost:5000/payments?count=100")
+        const response = await axiosInstance.get("/payments?count=100")
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);
@@ -77,7 +80,7 @@ export const cancelSubscription = createAsyncThunk("/cancel/subscribtion", async
         toast.loading("wait! Cancel subscribtion...", {
             position: 'top-center'
         })
-        const response = await axiosInstance.post("http://localhost:5000/payments/unsubscribe")
+        const response = await axiosInstance.post("/payments/unsubscribe")
         if (response.status === 200) {
             toast.dismiss();
             toast.success(response.data.message);

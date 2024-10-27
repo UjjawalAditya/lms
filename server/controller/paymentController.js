@@ -29,46 +29,50 @@ export const getRazorpayKey = async (req, res, next) => {
   }
 export const buySubscription = async (req, res, next) => {
     try {
-        const { id } = req.user
-        const user = await User.findById(id)
-        if (!user) {
-            return next(createError(404, "Please log in again"))
-        }
+        const { id } = req.user;
+        const user = await User.findById(id);
 
-        if (user.role === 'ADMIN') {
-            return next(createError(400, "Admin cannot purchase a subscription"))
-        }
+        // Initialize Razorpay subscription with complete details
+        const subscriptionOptions = {
+            plan_id: 'plan_PE4AU1jXtuW1Lq',
+            customer_notify: 1,
+            total_count: 12,
+            notes: {
+                user_id: user._id.toString(),
+                email: user.email
+            }
+        };
 
-        if (user.subscription.id && user.subscription.status === 'created') {
-            await user.save()
+        console.log('Subscription Options:', subscriptionOptions);
 
-            res.status(200).json({
-                success: true,
-                message: "subscribed successfully",
-                subscription_id: user.subscription.id
-            })
-        } else {
-            const subscription = await razorpay.subscriptions.create({
-                plan_id: process.env.RAZORPAY_PLAN_ID,
-                customer_notify: 1,
-                total_count: 12
-            })
+        const subscription = await razorpay.subscriptions.create(subscriptionOptions);
 
-            user.subscription.id = subscription.id
-            user.subscription.status = subscription.status
+        // Update user with new subscription details
+        user.subscription = {
+            id: subscription.id,
+            status: subscription.status
+        };
 
-            await user.save()
+        await user.save();
 
-            res.status(200).json({
-                success: true,
-                message: "subscribed successfully",
-                subscription_id: subscription.id
-            })
-        }
+        return res.status(200).json({
+            success: true,
+            message: "Subscription created successfully",
+            subscription_id: subscription.id
+        });
+
     } catch (error) {
-        return next(createError(500, error.message))
+        console.log('Detailed Error:', {
+            message: error.message || 'Razorpay subscription creation failed',
+            code: error.code,
+            description: error?.error?.description
+        });
+        return next(createError(500, 'Subscription creation failed'));
     }
 }
+
+
+
 export const verifySubscription = async (req, res, next) => {
     try {
         const { id } = req.user
